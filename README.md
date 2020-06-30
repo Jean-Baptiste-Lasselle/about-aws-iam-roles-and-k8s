@@ -65,7 +65,7 @@ Note :
 apiVersion: v1
 data:
   mapRoles: |
-    - rolearn: arn:aws:iam::555555555555:role/devel-worker-nodes-NodeInstanceRole-74RF4UBDUKL6
+    - rolearn: arn:aws:iam::555555555555:role/devel-worker-nodes-NodeInstanceRole-XXXXXXXXXXX
       username: system:node:{{EC2PrivateDNSName}}
       groups:
         - system:bootstrappers

@@ -1,10 +1,9 @@
 # about-aws-iam-roles-and-k8s
 
 Started since, and because of, https://github.com/kubernetes-sigs/aws-iam-authenticator/issues/174#issuecomment-651031781
-
 Hi all, thank you so much for sharing all these info (course I have same issue here), and : 
 * In my team, we are 2 engineers working on a set of 2 clusters
-* my colleague create one cluster, I created another
+* my colleague creates one cluster, I created another
 * we use the same AWS profile (`~/.aws/credentials` etc...)
 * but we have different aws users , and you can check that yourselves in your teams, with : 
 
@@ -12,7 +11,7 @@ Hi all, thank you so much for sharing all these info (course I have same issue h
 aws sts get-caller-identity | jq .Arn
 ```
 
-* so to AWS IAM logon to the cluster my colleague created, what we need, is "the ability the assume roles", something like impersonate ... : this as to be elaborated, and not satisfying in production, but, this is a first step on the raod to a production ready AWS Bourne Identities  management  
+* so to AWS IAM logon to the cluster my colleague created an IAM Role , and what we need, is "the ability the assume roles" 
 * So ok, now for that fist  step (adding / sharing cause I did not see that reference in the page) : https://aws.amazon.com/premiumsupport/knowledge-center/eks-api-server-unauthorized-error/
 
 
@@ -50,16 +49,6 @@ aws eks update-kubeconfig --name ${RICKY_S_CREATED_EKS_CLUSTER_NAME} --region ${
 
 I'll be glad to discuss this with anyone, and I 'll feedback when I have finished solving this issue
 
-Note : 
-
-* `--role-arn ${RICKY_S_BOURNE_IDENTITY}` : `${RICKY_S_BOURNE_IDENTITY}` is the ARN of a User, not a role ... SO to solve this you must  : 
-  * create a role , and check thaht with this role you are allowed to perform the Kubectl operations you desire (not necessarily ALL possible operations, I assume, If I may... :) )
-  * giive Bobby the permission to assume that new AWS IAM Role 
-  *  and there you go : 
-
-```bash 
-aws eks update-kubeconfig --name ${RICKY_S_CREATED_EKS_CLUSTER_NAME} --region ${AWS_REGION} --role-arn ${ARN_OF_THAT_NEW_ROLE_YOU_CREATED}
-```
 Note : 
 
 * `--role-arn ${RICKY_S_BOURNE_IDENTITY}` : `${RICKY_S_BOURNE_IDENTITY}` is the ARN of a User, not a role ... So to solve this you must  : 
@@ -102,7 +91,7 @@ data:
       groups:
         - system:masters
 ```
-  _Typical super admin / many devops_ setup. found at https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html
+  _Typical super admin / many devops_ setup, only it is just two users. found at https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html
 
   *  and there you go : 
 
@@ -128,3 +117,48 @@ Refs. :
 
 * https://kubernetes.io/docs/reference/access-authn-authz/rbac/#default-roles-and-role-bindings
 * https://aws.amazon.com/premiumsupport/knowledge-center/eks-api-server-unauthorized-error/ 
+
+
+### (See my aws-auth `ConfigMap`)
+
+```bash
+jibl@poste-devops-jbl-16gbram:~/gravitee-init-std-op$ kubectl get configmap/aws-auth --namespace kube-system
+NAME       DATA   AGE
+aws-auth   1      19d
+jibl@poste-devops-jbl-16gbram:~/gravitee-init-std-op$ kubectl describe configmap/aws-auth --namespace kube-system
+Name:         aws-auth
+Namespace:    kube-system
+Labels:       app.kubernetes.io/managed-by=pulumi
+Annotations:  
+Data
+====
+mapRoles:
+----
+- groups:
+  - system:bootstrappers
+  - system:nodes
+  rolearn: arn:aws:iam::XXXXXXXXXX:role/cluster-jbltest-gateway-profile-role
+  username: system:node:{{EC2PrivateDNSName}}
+- groups:
+  - system:bootstrappers
+  - system:nodes
+  rolearn: arn:aws:iam::XXXXXXXXXX:role/cluster-jbltest-front-profile-role
+  username: system:node:{{EC2PrivateDNSName}}
+- groups:
+  - system:bootstrappers
+  - system:nodes
+  rolearn: arn:aws:iam::XXXXXXXXXX:role/my-cluster-back-profile-role
+  username: system:node:{{EC2PrivateDNSName}}
+- groups:
+  - system:bootstrappers
+  - system:nodes
+  rolearn: arn:aws:iam::XXXXXXXXXX:role/my-cluster-system-profile-role
+  username: system:node:{{EC2PrivateDNSName}}
+
+Events:  <none>
+
+
+Events:  <none>
+```
+
+( `XXXXXXXXXX` is me obfuscating a valeu that any way, will be different for you )

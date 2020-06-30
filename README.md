@@ -1,6 +1,7 @@
 # about-aws-iam-roles-and-k8s
 
 Started since, and because of, https://github.com/kubernetes-sigs/aws-iam-authenticator/issues/174#issuecomment-651031781
+
 Hi all, thank you so much for sharing all these info (course I have same issue here), and : 
 * In my team, we are 2 engineers working on a set of 2 clusters
 * my colleague creates one cluster, I created another
@@ -137,12 +138,12 @@ mapRoles:
 - groups:
   - system:bootstrappers
   - system:nodes
-  rolearn: arn:aws:iam::XXXXXXXXXX:role/cluster-jbltest-gateway-profile-role
+  rolearn: arn:aws:iam::XXXXXXXXXX:role/my-cluster-gateway-profile-role
   username: system:node:{{EC2PrivateDNSName}}
 - groups:
   - system:bootstrappers
   - system:nodes
-  rolearn: arn:aws:iam::XXXXXXXXXX:role/cluster-jbltest-front-profile-role
+  rolearn: arn:aws:iam::XXXXXXXXXX:role/my-cluster-front-profile-role
   username: system:node:{{EC2PrivateDNSName}}
 - groups:
   - system:bootstrappers
@@ -161,4 +162,4 @@ Events:  <none>
 Events:  <none>
 ```
 
-( `XXXXXXXXXX` is me obfuscating a valeu that any way, will be different for you )
+( `XXXXXXXXXX` is me obfuscating a value that any way, will be different for you )

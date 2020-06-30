@@ -122,10 +122,10 @@ Refs. :
 ### (See my aws-auth `ConfigMap`)
 
 ```bash
-jibl@poste-devops-jbl-16gbram:~/gravitee-init-std-op$ kubectl get configmap/aws-auth --namespace kube-system
+jbl@poste-devops-jbl-16gbram:~/gravitee-init-std-op$ kubectl get configmap/aws-auth --namespace kube-system
 NAME       DATA   AGE
 aws-auth   1      19d
-jibl@poste-devops-jbl-16gbram:~/gravitee-init-std-op$ kubectl describe configmap/aws-auth --namespace kube-system
+jbl@poste-devops-jbl-16gbram:~/gravitee-init-std-op$ kubectl describe configmap/aws-auth --namespace kube-system
 Name:         aws-auth
 Namespace:    kube-system
 Labels:       app.kubernetes.io/managed-by=pulumi
